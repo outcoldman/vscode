@@ -1172,6 +1172,7 @@ suite('Editor Controller - Regression tests', () => {
 			text: [
 				'var x = (3 + (5-7));'
 			],
+
 			mode: new BracketMode()
 		}, (model, cursor) => {
 			// ensure is tokenized
@@ -2089,6 +2090,64 @@ suite('Editor Controller - Cursor Configuration', () => {
 		usingCursor({
 			text: [
 				'    some  line abc  '
+			],
+			modelOpts: {
+				insertSpaces: true,
+				tabSize: 4,
+				detectIndentation: true,
+				defaultEOL: DefaultEndOfLine.LF
+			}
+		}, (model, cursor) => {
+			// Move cursor to the end, verify that we do not trim whitespaces if line has values
+			moveTo(cursor, 1, model.getLineContent(1).length + 1);
+			cursorCommand(cursor, H.Type, { text: '\n' }, null, "keyboard");
+			assert.equal(model.getLineContent(1), '    some  line abc  ');
+			assert.equal(model.getLineContent(2), '    ');
+
+			// Try to enter again, we should trimmed previous line
+			cursorCommand(cursor, H.Type, { text: '\n' }, null, "keyboard");
+			assert.equal(model.getLineContent(1), '    some  line abc  ');
+			assert.equal(model.getLineContent(2), '');
+			assert.equal(model.getLineContent(3), '    ');
+
+			// More whitespaces
+			cursorCommand(cursor, H.Type, { text: '\t  ' }, null, "keyboard");
+			assert.equal(model.getLineContent(1), '    some  line abc  ');
+			assert.equal(model.getLineContent(2), '');
+			assert.equal(model.getLineContent(3), '    \t  ');
+
+			// Enter and verify that trimmed again
+			cursorCommand(cursor, H.Type, { text: '\n' }, null, "keyboard");
+			assert.equal(model.getLineContent(1), '    some  line abc  ');
+			assert.equal(model.getLineContent(2), '');
+			assert.equal(model.getLineContent(3), '');
+			assert.equal(model.getLineContent(4), '          ');
+
+			// Trimmed if we will keep only text
+			moveTo(cursor, 1, 4);
+			cursorCommand(cursor, H.Type, { text: '\n' }, null, "keyboard");
+			assert.equal(model.getLineContent(1), '');
+			assert.equal(model.getLineContent(2), '    some  line abc  ');
+			assert.equal(model.getLineContent(3), '');
+			assert.equal(model.getLineContent(4), '');
+			assert.equal(model.getLineContent(5), '          ');
+
+			// Trimmed if we will keep only text by selection
+			moveTo(cursor, 2, 4);
+			moveTo(cursor, 3, 1, true);
+			cursorCommand(cursor, H.Type, { text: '\n' }, null, "keyboard");
+			assert.equal(model.getLineContent(1), '');
+			assert.equal(model.getLineContent(2), '');
+			assert.equal(model.getLineContent(3), '');
+			assert.equal(model.getLineContent(4), '');
+			assert.equal(model.getLineContent(5), '          ');
+		});
+	});
+
+	test('Backspace removes whitespaces with tab size', () => {
+		usingCursor({
+			text: [
+				'        a    '
 			],
 			modelOpts: {
 				insertSpaces: true,
