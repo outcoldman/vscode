@@ -119,6 +119,8 @@ function cloneInternalEditorOptions(opts: editorCommon.IInternalEditorOptions): 
 		referenceInfos: opts.referenceInfos,
 		folding: opts.folding,
 		renderWhitespace: opts.renderWhitespace,
+		useTabStops: opts.useTabStops,
+		trimWhitespace: opts.trimWhitespace,
 		layoutInfo: {
 			width: opts.layoutInfo.width,
 			height: opts.layoutInfo.height,
@@ -308,6 +310,8 @@ class InternalEditorOptionsHelper {
 			referenceInfos: toBoolean(opts.referenceInfos),
 			folding: toBoolean(opts.folding),
 			renderWhitespace: toBoolean(opts.renderWhitespace),
+			useTabStops: toBoolean(opts.useTabStops),
+			trimWhitespace: toBoolean(opts.trimWhitespace),
 
 			layoutInfo: layoutInfo,
 			stylingInfo: {
@@ -401,6 +405,8 @@ class InternalEditorOptionsHelper {
 			referenceInfos:					(prevOpts.referenceInfos !== newOpts.referenceInfos),
 			folding:						(prevOpts.folding !== newOpts.folding),
 			renderWhitespace:				(prevOpts.renderWhitespace !== newOpts.renderWhitespace),
+			useTabStops:					(prevOpts.useTabStops !== newOpts.useTabStops),
+			trimWhitespace:					(prevOpts.trimWhitespace !== newOpts.trimWhitespace),
 
 			layoutInfo: 					(!EditorLayoutProvider.layoutEqual(prevOpts.layoutInfo, newOpts.layoutInfo)),
 			stylingInfo: 					(!this._stylingInfoEqual(prevOpts.stylingInfo, newOpts.stylingInfo)),
@@ -879,6 +885,16 @@ let editorConfiguration:IConfigurationNode = {
 			'type': 'boolean',
 			'default': DefaultConfig.editor.folding,
 			'description': nls.localize('folding', "Controls whether the editor has code folding enabled")
+		},
+		'editor.useTabStops' : {
+			'type': 'boolean',
+			'default': DefaultConfig.editor.useTabStops,
+			'description': nls.localize('useTabStops', "Controls whether the editor deletes up to next tabstop on backspace")
+		},
+		'editor.trimWhitespace' : {
+			'type': 'boolean',
+			'default': DefaultConfig.editor.trimWhitespace,
+			'description': nls.localize('trimWhitespace', "Controls whether the editor trims whitespace when moving to next line.")
 		},
 		'diffEditor.renderSideBySide' : {
 			'type': 'boolean',

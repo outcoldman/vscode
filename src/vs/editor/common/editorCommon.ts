@@ -520,6 +520,14 @@ export interface IEditorOptions {
 	 */
 	renderWhitespace?: boolean;
 	/**
+	 * Backspace delete up to next tabstop
+	 */
+	useTabStops?: boolean;
+	/**
+	 * Trim whitespace when moving to next line
+	 */
+	trimWhitespace?: boolean;
+	/**
 	 * The font family
 	 */
 	fontFamily?: string;
@@ -643,6 +651,8 @@ export interface IInternalEditorOptions {
 	referenceInfos: boolean;
 	folding: boolean;
 	renderWhitespace: boolean;
+	useTabStops: boolean;
+	trimWhitespace: boolean;
 
 	// ---- Options that are computed
 
@@ -731,6 +741,8 @@ export interface IConfigurationChangedEvent {
 	referenceInfos: boolean;
 	folding: boolean;
 	renderWhitespace: boolean;
+	useTabStops: boolean;
+	trimWhitespace: boolean;
 
 	// ---- Options that are computed
 	layoutInfo: boolean;
