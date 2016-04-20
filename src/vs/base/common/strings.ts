@@ -576,3 +576,11 @@ export const UTF8_BOM_CHARACTER = String.fromCharCode(__utf8_bom);
 export function startsWithUTF8BOM(str: string): boolean {
 	return (str && str.length > 0 && str.charCodeAt(0) === __utf8_bom);
 }
+
+export function repeat(s:string, count: number): string {
+	var result = '';
+	for (var i = 0; i < count; i++) {
+		result += s;
+	}
+	return result;
+}
